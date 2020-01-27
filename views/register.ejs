@@ -8,11 +8,7 @@
 </head>
 <body>
     <h2>Sign up</h2>
-    <% if (typeof errors !== 'undefined') { %>
-        <% errors.forEach(error => { %>
-            <p><%= error.msg %></p>
-        <% }) %> 
-    <% } %>
+    <%- include('partials/messages') %> 
     <form action="/user/register" method="POST">
         <div>
             <label for="name">Name</label>

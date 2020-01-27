@@ -8,11 +8,7 @@
 </head>
 <body>
     <h2>Log in</h2>
-    <% if (typeof error_msg !== 'undefined') { %>
-
-        <p><%= error_msg %></p>
-    
-    <% } %>
+    <%- include('partials/messages.ejs') %>
     <form action="/user/login" method="POST">
         <div>
             <label for="email">Email</label>
