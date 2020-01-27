@@ -28,7 +28,7 @@ router.post('/register', auth.checkNotAuthenticated, async (req, res) => {
 
     // Do some validation 
     if (!name || !email || !password) {
-        errors.push({msg: 'All fields must be complete'})
+        errors.push({ msg: 'All fields must be complete' })
     }
 
     const passwordMinLength = 3
@@ -61,6 +61,7 @@ router.post('/register', auth.checkNotAuthenticated, async (req, res) => {
                             'success_msg',
                             'You are now registered and can log in'
                         )
+                        
                         res.redirect('/user/login')
                     })
                     .catch(err => console.error(err))
