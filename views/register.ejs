@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>User Auhw with NodeJS</title>
+</head>
+<body>
+    <h2>Sign up</h2>
+    <% if (typeof errors !== 'undefined') { %>
+        <% errors.forEach(error => { %>
+            <p><%= error.msg %></p>
+        <% }) %> 
+    <% } %>
+    <form action="/user/register" method="POST">
+        <div>
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name">
+        </div>
+        <div>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email">
+        </div>
+        <div>
+            <label for="name">Password</label>
+            <input type="password" name="password" id="password">
+        </div>
+        
+        <input type="submit" value="Sign up...">
+    </form>
+
+    <p>Already signed up? <a href="/user/login">Login!</a></p>
+</body>
+</html>
