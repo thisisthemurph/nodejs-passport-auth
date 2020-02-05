@@ -1,16 +1,15 @@
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config()
-}
-
 const express = require('express')
 const app = express()
 
 // Connect to MongoDB
 require('./db.js').connect()
 
+// Middleware
+app.use(express.json())
+
 // Routes
-app.use('/', require('./routes/index.routes.js'))
-app.use('/user', require('./routes/user.routes.js'))
+app.use('/api', require('./routes/index.routes.js'))
+app.use('/api/user', require('./routes/auth.routes.js'))
 
 // Run the server
 const port = process.env.PORT || 3000
