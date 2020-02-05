@@ -1,21 +1,14 @@
-function checkAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next()
+const jwt = require('jasonwebtoken')
+
+// Middleware to be used on routes requiring authentication
+module.exports = (req, res, next) => {
+    const token = req.header('auth-token')
+    if (!token) req.status(401).send('Access denied!')
+
+    try {
+        const verified = jwt.verify(token, process.env.TOKEN_SECRET)
+        req.user = verified
+    } catch (err) {
+        res.status(400).send('Invalid Token')
     }
-
-    req.flash('error_msg', 'Please log in...')
-    res.redirect('/user/login')
-}
-
-function checkNotAuthenticated(req, res, next) {
-    if (!req.isAuthenticated()) {
-       return  next()
-    }
-
-    res.redirect('/')
-}
-
-module.exports = {
-    checkAuthenticated: checkAuthenticated,
-    checkNotAuthenticated: checkNotAuthenticated
 }
