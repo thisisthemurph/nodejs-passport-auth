@@ -4,8 +4,6 @@ mongoose.Promise = global.Promise
 
 dotenv.config()
 
-const dbConfig = require('./config/db.config.js')
-
 module.exports.connect = () => {
     mongoose.connect(process.env.DATABASE_URI, {
         useNewUrlParser: true,
