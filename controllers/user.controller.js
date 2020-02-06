@@ -1,24 +1,31 @@
 const UserModel = require('../models/user.model.js')
 
-exports.findUserByEmail = (email, resolve, reject) => {
-    UserModel.findOne({ email: email })
-        .then(user => {
-            console.log('finding user')
-            return resolve(user)
-        })
-
-        .catch(err => {
-            return reject(err)
-        })
+exports.getAll = async () => {
+    return await UserModel.find()
 }
 
-exports.findUserById = (id, resolve, reject) => {
-    UserModel.findById(id)
-        .then(user => {
-            return resolve(user)
-        })
+exports.findByEmail = async email => {
+    // UserModel.findOne({ email: email })
+    //     .then(user => {
+    //         console.log('finding user')
+    //         return resolve(user)
+    //     })
 
-        .catch(err => {
-            return reject(err)
-        })
+    //     .catch(err => {
+    //         return reject(err)
+    //     })
+
+    try {
+        return await UserModel.findOne({ email: email })
+    } catch (err) {
+        return null
+    }
+}
+
+exports.findById = async id => {
+    try {
+        return await UserModel.findById(id)
+    } catch (err) {
+        return null
+    }
 }
