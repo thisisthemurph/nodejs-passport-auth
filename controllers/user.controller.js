@@ -5,16 +5,6 @@ exports.getAll = async () => {
 }
 
 exports.findByEmail = async email => {
-    // UserModel.findOne({ email: email })
-    //     .then(user => {
-    //         console.log('finding user')
-    //         return resolve(user)
-    //     })
-
-    //     .catch(err => {
-    //         return reject(err)
-    //     })
-
     try {
         return await UserModel.findOne({ email: email })
     } catch (err) {
@@ -28,4 +18,17 @@ exports.findById = async id => {
     } catch (err) {
         return null
     }
+}
+
+exports.delete = (id, success, fail) => {
+    UserModel.findByIdAndRemove(id)
+        .then(user => {
+            if (!user) return fail(`No user found with id ${id}`)
+            return success(user)
+        })
+        .catch(err => {
+            if (err.kind === 'ObjectId' || err.name === 'NotFound')
+                return fail(`No user found with id ${id}`)
+            return fail(`Could not delete user with id ${id}`)
+        })
 }
