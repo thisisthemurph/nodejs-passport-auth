@@ -26,7 +26,7 @@ router.post('/register', async (req, res) => {
         email: req.body.email,
         password: hash
     })
-    
+
     try {
         const savedUser = await user.save()
         res.send(savedUser)
@@ -36,7 +36,7 @@ router.post('/register', async (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
-    
+
     // User validation
     const {error} = validation.loginUserValidaion(req.body)
     if (error) return res.status(400).send(error.details[0].message)

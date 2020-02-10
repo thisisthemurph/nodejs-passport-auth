@@ -14,8 +14,4 @@ app.use('/api/auth', require('./routes/auth.routes.js'))
 app.use('/api/user', require('./authenticate.js'))
 require('./routes/user.routes.js')(app)
 
-// Run the server
-const port = process.env.PORT || 3000
-app.listen(port, () => {
-    console.log(`Express server listening on port ${port}`)
-})
+module.exports = app
