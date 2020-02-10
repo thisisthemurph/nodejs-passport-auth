@@ -12,6 +12,7 @@ exports.findByEmail = async (req, res) => {
 
         res.json(user)
     } catch (err) {
+        console.error(err)
         return res.status(400).send('No user found with that email address')
     }
 }
@@ -28,14 +29,16 @@ exports.findById = async (req, res) => {
 }
 
 exports.delete = (req, res) => {
-    UserModel.findByIdAndRemove(req.params.userId)
+    const userId = req.params.userId
+
+    UserModel.findByIdAndRemove(userId)
         .then(user => {
-            if (!user) return req.status(400).send(`No user found with id ${id}`)
-            req.json(user)
+            if (!user) return res.status(400).send(`No user found with id ${userId}`)
+            res.json(user)
         })
         .catch(err => {
             if (err.kind === 'ObjectId' || err.name === 'NotFound')
-                return req.status(400).send(`No user found with id ${id}`)
-            req.status(500).send(`Could not delete user with id ${id}`)
+                return res.status(400).send(`No user found with id ${userId}`)
+            res.status(500).send(`Could not delete user with id ${userId}`)
         })
 }
