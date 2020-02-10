@@ -10,6 +10,8 @@ app.use(express.json())
 // Routes
 app.use('/api', require('./routes/index.routes.js'))
 app.use('/api/auth', require('./routes/auth.routes.js'))
+
+app.use('/api/user', require('./authenticate.js'))
 require('./routes/user.routes.js')(app)
 
 // Run the server

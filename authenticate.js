@@ -1,14 +1,16 @@
-const jwt = require('jasonwebtoken')
+const jwt = require('jsonwebtoken')
 
 // Middleware to be used on routes requiring authentication
 module.exports = (req, res, next) => {
     const token = req.header('auth-token')
-    if (!token) req.status(401).send('Access denied!')
+    if (!token) return res.sendStatus(401)
 
     try {
         const verified = jwt.verify(token, process.env.TOKEN_SECRET)
-        req.user = verified
+        req.token = verified
     } catch (err) {
-        res.status(400).send('Invalid Token')
+        return res.status(401).send('Bad authentication')
     }
+
+    next()
 }
