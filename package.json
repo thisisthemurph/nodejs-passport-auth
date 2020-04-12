@@ -1,7 +1,7 @@
 {
   "name": "user_auth",
   "jest": {
-      "testEnvironment": "node"
+    "testEnvironment": "node"
   },
   "version": "1.0.0",
   "description": "",
