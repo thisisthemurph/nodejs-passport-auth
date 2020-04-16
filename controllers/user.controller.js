@@ -8,23 +8,23 @@ exports.getAll = async (req, res) => {
 exports.findByEmail = async (req, res) => {
     try {
         const user = await UserModel.findOne({ email: req.params.userEmail })
-        if (!user) return res.status(400).send('No user found with that email address')
+        if (!user) return res.status(400).json({msg: 'No user found with that email address'})
 
         res.json(user)
     } catch (err) {
         console.error(err)
-        return res.status(400).send('No user found with that email address')
+        return res.status(400).json({msg: 'No user found with that email address'})
     }
 }
 
 exports.findById = async (req, res) => {
     try {
         const user = await UserModel.findById(req.params.userId)
-        if (!user) return res.status(400).send('No user found with that id')
+        if (!user) return res.status(400).json({msg: 'No user found with that id'})
 
         res.json(user)
     } catch (err) {
-        return res.status(400).send('No user found with that id')
+        return res.status(400).json({msg: 'No user found with that id'})
     }
 }
 
@@ -33,12 +33,12 @@ exports.delete = (req, res) => {
 
     UserModel.findByIdAndRemove(userId)
         .then(user => {
-            if (!user) return res.status(400).send(`No user found with id ${userId}`)
+            if (!user) return res.status(400).json({msg: `No user found with id ${userId}`})
             res.json(user)
         })
         .catch(err => {
             if (err.kind === 'ObjectId' || err.name === 'NotFound')
-                return res.status(400).send(`No user found with id ${userId}`)
-            res.status(500).send(`Could not delete user with id ${userId}`)
+                return res.status(400).send({msg: `No user found with id ${userId}`})
+            res.status(500).json({msg: `Could not delete user with id ${userId}`})
         })
 }
