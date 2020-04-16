@@ -15,6 +15,10 @@ const registrationUserValidaion = user => {
             .min(6)
             .max(1024)
             .required(),
+        password2: Joi.string()
+            .min(6)
+            .max(1024)
+            .required()
     })
 
     return schema.validate(user)
