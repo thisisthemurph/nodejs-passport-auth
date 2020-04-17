@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
 const UserModel = require('../models/user.model.js')
 const validation = require('../validation.js')
-const AuthController = require('../controllers/auth.controller.js')
 
 dotenv.config()
 
@@ -99,9 +98,18 @@ router.post('/authenticate_token', async (req, res) => {
         const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET)
 
         if (decodedToken) {
+            console.log(decodedToken)
             // Ensure the token has an associated user
-            if (AuthController.authenticateToken(decodedToken)) {
-                return res.status(404).json({
+            // if (AuthController.authenticateToken(decodedToken)) {
+            //     return res.status(418).json({
+            //         success: false,
+            //         msg: 'It has not been possible to locate a user with that id'
+            //     })
+            // }
+            
+            const user = await UserModel.findById(decodedToken._id)
+            if (!user) {
+                return res.status(418).json({
                     success: false,
                     msg: 'It has not been possible to locate a user with that id'
                 })
@@ -113,7 +121,8 @@ router.post('/authenticate_token', async (req, res) => {
                     id: user._id,
                     name: user.name,
                     email: user.email
-                } })
+                } 
+            })
         } else {
             return res.status(401).json({
                 success: false,
@@ -121,7 +130,8 @@ router.post('/authenticate_token', async (req, res) => {
             })
         }
     } catch (err) {
-            return res.status(500).json({
+        console.error(err)
+        return res.status(500).json({
             success: false,
             msg: 'Bad authentication'
         })

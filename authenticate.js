@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const AuthController = require('./controllers/auth.controller.js')
+const UserModel = require('./models/user.model.js')
 
 // Middleware to be used on routes requiring authentication
 module.exports = (req, res, next) => {
@@ -10,12 +10,17 @@ module.exports = (req, res, next) => {
     })
 
     try {
-        req.token = jwt.verify(token, process.env.TOKEN_SECRET)
+        const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET)
+        const user = UserModel.findById(decodedToken._id)
 
-        if (!AuthController.authenticateToken(token)) return res.status(401).json({
+        if (!user) return res.status(401).json({
             success: false,
             msg: 'No such user'
         })
+        
+        req.token = decodedToken
+        req.requestUser = user
+
     } catch (err) {
         return res.status(418).json({ success: false, msg: 'Bad authentication' })
     }
