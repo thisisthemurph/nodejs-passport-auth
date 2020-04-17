@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
 const UserModel = require('../models/user.model.js')
 const validation = require('../validation.js')
+const AuthController = require('../controllers/auth.controller.js')
 
 dotenv.config()
 
@@ -62,14 +63,14 @@ router.post('/login', async (req, res) => {
 
     // Does the user exist?
     const user = await UserModel.findOne({ email: req.body.email })
-    if (!user) return res.status(400).json({
+    if (!user) return res.status(404).json({
         success: false,
         msg: 'An account with that email address does not exist'
     })
 
     // Is the password correct?
     const validPassword = await bcrypt.compare(req.body.password, user.password)
-    if (!validPassword) return res.status(400).json({
+    if (!validPassword) return res.status(401).json({
         success: false,
         msg: 'That password is incorrect'
     })
@@ -95,15 +96,11 @@ router.post('/authenticate_token', async (req, res) => {
     })
 
     try {
-        const verified = jwt.verify(token, process.env.TOKEN_SECRET)
+        const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET)
 
-        if (verified) {
-            const payload = token.split('.')[1]
-            const buff = new Buffer(payload, 'base64')
-            const userPayload = JSON.parse(buff.toString('ascii'))
-            const user = await UserModel.findById(userPayload._id)
-
-            if (!user) {
+        if (decodedToken) {
+            // Ensure the token has an associated user
+            if (AuthController.authenticateToken(decodedToken)) {
                 return res.status(404).json({
                     success: false,
                     msg: 'It has not been possible to locate a user with that id'
@@ -120,13 +117,11 @@ router.post('/authenticate_token', async (req, res) => {
         } else {
             return res.status(401).json({
                 success: false,
-                msg: 'Bad auth'
+                msg: 'Bad authentication'
             })
         }
     } catch (err) {
-        console.error(err)
-
-        return res.status(401).json({
+            return res.status(500).json({
             success: false,
             msg: 'Bad authentication'
         })
